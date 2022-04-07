@@ -1,16 +1,3 @@
-/* KerbalSimpitStageDemo
-
-   This sketch enhances the "Debounce" Arduino demo sketch
-   to implement a simple staging button.
-
-   See https://www.arduino.cc/en/tutorial/debounce for
-   hardware requirements and how to get debounce up and
-   running, then return and give this code a try with KSP.
-
-   Note: Unlike the debounce example, this sketch will
-   light the LED while the button is pressed.
-
-*/
 #include "KerbalSimpit.h"
 
 // constants won't change. They're used here to
