@@ -2,9 +2,9 @@ A0 Throttle
 A1
 A2
 A3
-A4 Action Group 3
-A5 Action Group 4
-A6 Action Group 5
+A4/D58 Action Group 3
+A5/D59 Action Group 4
+A6/D60 Action Group 5
 A7
 A8
 A9
