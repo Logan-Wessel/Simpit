@@ -59,10 +59,11 @@ void loop() {
   // Calls functions to get input states
 
   ThrottleHandler();
-  SASHandlerCop();
-  RCSHandlerP()
+  SASHandler();
+  RCSHandler()
   StageHandler();
   AbortHandler();
+  GearHnadler();
 
 }
 

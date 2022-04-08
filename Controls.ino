@@ -18,44 +18,41 @@ void ThrottleHandler() {
 
 // SAS Switches ====================================================================================================
 
-void SASHandlerCop() {
-  // Get the SAS switch state
+void SASHandler() {
+  // Get the switch state
   bool sas_switch_stateC = digitalRead(SASCop);
 
-  // Update the SAS to match the state, only if a change is needed to avoid
-  // spamming commands.
+  // Update the switch to match the state, only if a change is needed to avoid spamming commands.
   if(sas_switch_stateC && !(currentActionStatus & SAS_ACTION)){
-    mySimpit.printToKSP("Activate SAS!");
+    mySimpit.printToKSP("Activate CoPilot SAS!");
     mySimpit.activateAction(SAS_ACTION);
   }
   if(!sas_switch_stateC && (currentActionStatus & SAS_ACTION)){
-    mySimpit.printToKSP("Desactivate SAS!");
+    mySimpit.printToKSP("Desactivate CoPilot SAS!");
     mySimpit.deactivateAction(SAS_ACTION);
   }
 
-  // Get the SAS switch state
+  // Get the switch state
   bool sas_switch_stateP = digitalRead(SASP);
 
-  // Update the SAS to match the state, only if a change is needed to avoid
-  // spamming commands.
+  // Update the switch to match the state, only if a change is needed to avoid spamming commands.
   if(sas_switch_stateP && !(currentActionStatus & SAS_ACTION)){
-    mySimpit.printToKSP("Activate SAS!");
+    mySimpit.printToKSP("Activate Pilot SAS!");
     mySimpit.activateAction(SAS_ACTION);
   }
   if(!sas_switch_stateP && (currentActionStatus & SAS_ACTION)){
-    mySimpit.printToKSP("Desactivate SAS!");
+    mySimpit.printToKSP("Desactivate CoPilot SAS!");
     mySimpit.deactivateAction(SAS_ACTION);
   }
 
 
 // RCS Switches ====================================================================================================
 
-void RCSandlerP() {
-  // Get the RCS switch state
+void RCSHandler() {
+  // Get the switch state
   bool rcs_switch_state = digitalRead(RCS);
 
-  // Update the RCS to match the state, only if a change is needed to avoid
-  // spamming commands.
+  // Update the switch to match the state, only if a change is needed to avoid spamming commands.
   if(rcs_switch_state && !(currentActionStatus & RCS_ACTION)){
     mySimpit.printToKSP("Activate RCS!");
     mySimpit.activateAction(RCS_ACTION);
@@ -143,4 +140,21 @@ void AbortHandler() {
   // save the reading.  Next time through the loop,
   // it'll be the lastButtonState:
   lastButtonStateAbort = readingAbort;
+}
+
+// Gear Switch ====================================================================================================
+
+void GearHandler() {
+  // Get the switch state
+  bool gear_switch_state = digitalRead(Gear);
+
+  // Update the switch to match the state, only if a change is needed to avoid spamming commands.
+  if(gear_switch_state && !(currentActionStatus & GEAR_ACTION)){
+    mySimpit.printToKSP("Activate Gear!");
+    mySimpit.activateAction(RCS_ACTION);
+  }
+  if(!rcs_switch_state && (currentActionStatus & GEAR_ACTION)){
+    mySimpit.printToKSP("Desactivate Gear!");
+    mySimpit.deactivateAction(GEAR_ACTION);
+  }
 }
