@@ -24,7 +24,7 @@ KerbalSimpit mySimpit(Serial);
 
 void setup() {
   // Open the serial connection.
-  Serial.begin(1200);
+  Serial.begin(115200);
 
   // Set initial pin states, and turn on the LED
   pinMode(buttonPin, INPUT_PULLUP);
