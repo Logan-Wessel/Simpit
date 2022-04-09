@@ -9,6 +9,7 @@ GeneralVariableSetup();
 
 // Declare a KerbalSimpit object that will
 // communicate using the "Serial" device.
+
 KerbalSimpit mySimpit(Serial);
 
 // Runs once, to do things that only need to happen once right at the start
@@ -18,10 +19,13 @@ KerbalSimpit mySimpit(Serial);
 // Setup ====================================================================================================
 
 void setup() {
+  
   // Open the serial connection.
+  
   Serial.begin(115200);
 
   // Set up toggle switches with builtin pullup.
+  
   pinMode(SasCop, INPUT_PULLUP);
   pinMode(SasP, INPUT_PULLUP);
   pinMode(RCS, INPUT_PULLUP);
@@ -31,9 +35,17 @@ void setup() {
   pinMode(Ignition, INPUT_PULLUP);
   pinMode(Abort, INPUT_PULLUP);
   pinMode(Stage, INPUT_PULLUP);
+  pinMode(AG1, INPUT_PULLUP);
+  pinMode(AG2, INPUT_PULLUP);
+  pinMode(AG3, INPUT_PULLUP);
+  pinMode(AG4, INPUT_PULLUP);
+  pinMode(AG5, INPUT_PULLUP);
+
+
 
   // This loop continually attempts to handshake with the plugin.
   // It will keep retrying until it gets a successful handshake.
+  
   while (!mySimpit.init()) {
     delay(100);
   }  
@@ -41,10 +53,13 @@ void setup() {
 
   // Sets our callback function. The KerbalSimpit library will
   // call this function every time a packet is received.
+  
   mySimpit.inboundHandler(messageHandler);
+  
   // Send a message to the plugin registering for the Action status channel.
   // The plugin will now regularly send Action status  messages while the
   // flight scene is active in-game.
+  
   mySimpit.registerChannel(ACTIONSTATUS_MESSAGE);
 }
 
@@ -55,6 +70,7 @@ void setup() {
 
 void loop() {
   // Check for new serial messages.
+  
   mySimpit.update();
 
   // Calls functions to get input states
@@ -67,6 +83,7 @@ void loop() {
   GearHnadler();
   BrakesHandler();
   LightsHandler();
+  ActionGroupsHandler();
 
 }
 
@@ -76,8 +93,10 @@ void loop() {
 void messageHandler(byte messageType, byte msg[], byte msgSize) {
   switch(messageType) {
   case ACTIONSTATUS_MESSAGE:
+  
     // Checking if the message is the size we expect is a very basic
     // way to confirm if the message was received properly.
+    
     if (msgSize == 1) {
       currentActionStatus = msg[0];
 
