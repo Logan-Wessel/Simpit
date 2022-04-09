@@ -142,6 +142,7 @@ void AbortHandler() {
   lastButtonStateAbort = readingAbort;
 }
 
+
 // Gear Switch ====================================================================================================
 
 void GearHandler() {
@@ -151,10 +152,46 @@ void GearHandler() {
   // Update the switch to match the state, only if a change is needed to avoid spamming commands.
   if(gear_switch_state && !(currentActionStatus & GEAR_ACTION)){
     mySimpit.printToKSP("Activate Gear!");
-    mySimpit.activateAction(RCS_ACTION);
+    mySimpit.activateAction(GEAR_ACTION);
   }
-  if(!rcs_switch_state && (currentActionStatus & GEAR_ACTION)){
+  if(!gear_switch_state && (currentActionStatus & GEAR_ACTION)){
     mySimpit.printToKSP("Desactivate Gear!");
     mySimpit.deactivateAction(GEAR_ACTION);
+  }
+}
+
+
+// Lights Switch ====================================================================================================
+
+void LightsHandler() {
+  // Get the switch state
+  bool lights_switch_state = digitalRead(Lights);
+
+  // Update the switch to match the state, only if a change is needed to avoid spamming commands.
+  if(lights_switch_state && !(currentActionStatus & LIGHTS_ACTION)){
+    mySimpit.printToKSP("Activate Lights!");
+    mySimpit.activateAction(LIGHTS_ACTION);
+  }
+  if(!lights_switch_state && (currentActionStatus & LIGHTS_ACTION)){
+    mySimpit.printToKSP("Desactivate Lights!");
+    mySimpit.deactivateAction(LIGHTS_ACTION);
+  }
+}
+
+
+// Brakes Switch ====================================================================================================
+
+void BrakesHandler() {
+  // Get the switch state
+  bool brakes_switch_state = digitalRead(Brakes);
+
+  // Update the switch to match the state, only if a change is needed to avoid spamming commands.
+  if(brakes_switch_state && !(currentActionStatus & BRAKES_ACTION)){
+    mySimpit.printToKSP("Activate Brakes!");
+    mySimpit.activateAction(BRAKES_ACTION);
+  }
+  if(!lights_switch_state && (currentActionStatus & BRAKES_ACTION)){
+    mySimpit.printToKSP("Desactivate Brakes!");
+    mySimpit.deactivateAction(BRAKES_ACTION);
   }
 }

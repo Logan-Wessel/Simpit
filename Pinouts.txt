@@ -1,4 +1,4 @@
-A0 Throttle
+A0 Throttle #
 A1
 A2
 A3
@@ -41,21 +41,21 @@ A15
 25 Pitch Down Cop
 26 Yaw Right Cop
 27 Yaw Left Cop
-28 Sas Cop
+28 Sas Cop #
 29 Action Group 1
-30 Lights
-31 Breaks
-32 Gear
-33 RCS
+30 Lights #
+31 Breaks #
+32 Gear #
+33 RCS #
 34 RCS Dir
 35 RCS Dir
 36 RCS Dir
 37 RCS Dir
 38 RCS Dir
 39 RCS Dir
-40 Abord
-41 Ignition
-42 All Stage Switches
+40 Abort #
+41 Ignition #
+42 All Stage Switches #
 43 Action Group 2
 44
 45
@@ -66,7 +66,7 @@ A15
 50 Pitch Down P
 51 Yaw Right P
 52 Yaw Left P
-53 Sas O
+53 Sas P #
 54
 55
 56

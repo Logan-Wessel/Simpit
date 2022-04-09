@@ -30,6 +30,7 @@ void setup() {
   pinMode(Brakes, INPUT_PULLUP);
   pinMode(Ignition, INPUT_PULLUP);
   pinMode(Abort, INPUT_PULLUP);
+  pinMode(Stage, INPUT_PULLUP);
 
   // This loop continually attempts to handshake with the plugin.
   // It will keep retrying until it gets a successful handshake.
@@ -64,6 +65,8 @@ void loop() {
   StageHandler();
   AbortHandler();
   GearHnadler();
+  BrakesHandler();
+  LightsHandler();
 
 }
 
