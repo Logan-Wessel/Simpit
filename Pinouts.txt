@@ -44,7 +44,7 @@ A15
 28 Sas Cop #
 29 Action Group 1
 30 Lights #
-31 Breaks #
+31 Brakes #
 32 Gear #
 33 RCS #
 34 RCS Dir
