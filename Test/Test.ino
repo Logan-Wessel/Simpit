@@ -100,6 +100,9 @@ void setup() {
 
   Serial.begin(115200);
 
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, HIGH);
+
   // Set up toggle switches with builtin pullup.
 
   pinMode(SASCop, INPUT_PULLUP);
@@ -117,13 +120,13 @@ void setup() {
   pinMode(AG5, INPUT_PULLUP);
 
 
-
   // This loop continually attempts to handshake with the plugin.
   // It will keep retrying until it gets a successful handshake.
 
   while (!mySimpit.init()) {
     delay(100);
   }
+  digitalWrite(LED_BUILTIN, LOW);
   mySimpit.printToKSP("Connected", PRINT_TO_SCREEN);
 
   // Sets our callback function. The KerbalSimpit library will
@@ -213,11 +216,11 @@ void loop() {
 
   if (rcs_switch_state && !(currentActionStatus & RCS_ACTION)) {
     mySimpit.printToKSP("Activate RCS!");
-    mySimpit.deactivateAction(RCS_ACTION);
+    mySimpit.activateAction(RCS_ACTION);
   }
   if (!rcs_switch_state && (currentActionStatus & RCS_ACTION)) {
     mySimpit.printToKSP("Desactivate RCS!");
-    mySimpit.activateAction(RCS_ACTION);
+    mySimpit.deactivateAction(RCS_ACTION);
   }
 
 
@@ -448,12 +451,12 @@ void messageHandler(byte messageType, byte msg[], byte msgSize) {
       if (msgSize == 1) {
         currentActionStatus = msg[0];
 
-        //Let the LED_BUILIN match the current SAS state
-        //if(currentActionStatus & SAS_ACTION){
-        //  digitalWrite(LED_BUILTIN, HIGH);
-        //} else {
-        //  digitalWrite(LED_BUILTIN, LOW);
-        //}
+        //Let the LED_BUILIN match the current RCS state
+        if(currentActionStatus & RCS_ACTION){
+          digitalWrite(LED_BUILTIN, HIGH);
+        } else {
+          digitalWrite(LED_BUILTIN, LOW);
+        }
       }
       break;
   }
