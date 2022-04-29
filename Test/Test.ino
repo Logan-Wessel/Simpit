@@ -54,6 +54,46 @@ const int RCSDirU = 38;
 const int RCSDirD = 39;
 const int Abort = 40;
 
+// Setup Key Values
+
+const int TKey = 0x54;
+const int GKey = 0x47;
+const int IKey = 0x49;
+const int JKey = 0x4A;
+const int LKey = 0x4C;
+const int KKey = 0x4B;
+const int HKey = 0x48;
+const int NKey = 0x4E;
+const int AKey = 0x41;
+const int SKey = 0x53;
+const int DKey = 0x44;
+const int WKey = 0x57;
+const int QKey = 0x51;
+const int EKey = 0x45;
+const int UKey = 0x75;
+const int OKey = 0x6F;
+
+// Setup key pressed variables
+
+bool tPressed = false;
+bool gPressed = true;
+bool hPressed = false;
+bool nPressed = false;
+bool iPressed = false;
+bool kPressed = false;
+bool jPressed = false;
+bool lPressed = false;
+bool oPressed = false;
+bool uPressed = false;
+bool aPressed = false;
+bool sPressed = false;
+bool dPressed = false;
+bool wPressed = false;
+bool qPressed = false;
+bool ePressed = false;
+
+bool readingSAS = false;
+
 // General Variable Setup ====================================================================================================
 
 // Initial setup for values used later for controls and stuff like that
@@ -79,7 +119,15 @@ int lastDebounceTimeStage = lastDebounceTime;
 int lastButtonStateStage = lastButtonState;
 int lastDebounceTimeAbort = lastDebounceTime;
 int lastButtonStateAbort = lastButtonState;
-
+int lastDebounceTimeSASP = lastDebounceTime;
+int lastButtonStateSASP = LOW;
+int lastButtonStateSASCop = LOW;
+int lastButtonStateYawL = LOW;
+int lastButtonStateYawR = LOW;
+int lastButtonStatePitchU = LOW;
+int lastButtonStatePitchD = LOW;
+int lastButtonStateRollR = LOW;
+int lastButtonStateRollL = LOW;
 
 // Communication setup
 
@@ -107,17 +155,29 @@ void setup() {
 
   pinMode(SASCop, INPUT_PULLUP);
   pinMode(SASP, INPUT_PULLUP);
-  pinMode(RCS, INPUT_PULLUP);
-  pinMode(Gear, INPUT_PULLUP);
-  pinMode(Lights, INPUT_PULLUP);
-  pinMode(Brakes, INPUT_PULLUP);
+  //pinMode(RCS, INPUT_PULLUP);
+  //pinMode(Gear, INPUT_PULLUP);
+  //pinMode(Lights, INPUT_PULLUP);
+  //pinMode(Brakes, INPUT_PULLUP);
   pinMode(Abort, INPUT_PULLUP);
   pinMode(Stage, INPUT_PULLUP);
-  pinMode(AG1, INPUT_PULLUP);
-  pinMode(AG2, INPUT_PULLUP);
-  pinMode(AG3, INPUT_PULLUP);
-  pinMode(AG4, INPUT_PULLUP);
-  pinMode(AG5, INPUT_PULLUP);
+  //pinMode(AG1, INPUT_PULLUP);
+  //pinMode(AG2, INPUT_PULLUP);
+  //pinMode(AG3, INPUT_PULLUP);
+  //pinMode(AG4, INPUT_PULLUP);
+  //pinMode(AG5, INPUT_PULLUP);
+  pinMode(RollRightCop, INPUT_PULLUP);
+  pinMode(RollLeftCop, INPUT_PULLUP);
+  pinMode(PitchUpCop, INPUT_PULLUP);
+  pinMode(PitchDownCop, INPUT_PULLUP);
+  pinMode(YawRightCop, INPUT_PULLUP);
+  pinMode(YawLeftCop, INPUT_PULLUP);
+  pinMode(RollRightP, INPUT_PULLUP);
+  pinMode(RollLeftP, INPUT_PULLUP);
+  pinMode(PitchUpP, INPUT_PULLUP);
+  pinMode(PitchDownP, INPUT_PULLUP);
+  pinMode(YawRightP, INPUT_PULLUP);
+  pinMode(YawLeftP, INPUT_PULLUP);
 
 
   // This loop continually attempts to handshake with the plugin.
@@ -153,6 +213,256 @@ void loop() {
 
   // Controls ====================================================================================================
 
+
+  // YAW Buttons ====================================================================================================
+
+  bool readingYRCP = digitalRead(YawRightCop);
+  bool readingYLCP = digitalRead(YawLeftCop);
+  bool readingYRP = digitalRead(YawRightP);
+  bool readingYLP = digitalRead(YawLeftP);
+
+  // YAW Right Copilot
+  if (!dPressed && readingYRCP) {
+    keyboardEmulatorMessage msg(DKey, KEY_UP_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    dPressed = true;
+  }
+  if (dPressed && !readingYRCP) {
+    keyboardEmulatorMessage msg(DKey, KEY_DOWN_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    dPressed = false;
+  }
+
+  // YAW Right Pilot
+  if (!dPressed && readingYRP) {
+    keyboardEmulatorMessage msg(DKey, KEY_UP_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    dPressed = true;
+  }
+  if (dPressed && !readingYRP) {
+    keyboardEmulatorMessage msg(DKey, KEY_DOWN_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    dPressed = false;
+  }
+
+  // YAW Left Copilot
+  if (!aPressed && readingYLCP) {
+    keyboardEmulatorMessage msg(AKey, KEY_UP_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    aPressed = true;
+  }
+  if (aPressed && !readingYLCP) {
+    keyboardEmulatorMessage msg(AKey, KEY_DOWN_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    aPressed = false;
+  }
+
+  // YAW Left Pilot
+  if (!aPressed && readingYLP) {
+    keyboardEmulatorMessage msg(AKey, KEY_UP_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    aPressed = true;
+  }
+  if (aPressed && !readingYLP) {
+    keyboardEmulatorMessage msg(AKey, KEY_DOWN_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    aPressed = false;
+  }
+
+
+  // PITCH Buttons ====================================================================================================
+
+  bool readingPUCP = digitalRead(PitchUpCop);
+  bool readingPDCP = digitalRead(PitchDownCop);
+  bool readingPUP = digitalRead(PitchUpP);
+  bool readingPDP = digitalRead(PitchDownP);
+
+  // PITCH Up Copilot
+  if (!sPressed && readingPUCP) {
+    keyboardEmulatorMessage msg(SKey, KEY_UP_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    sPressed = true;
+  }
+  if (sPressed && !readingPUCP) {
+    keyboardEmulatorMessage msg(SKey, KEY_DOWN_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    sPressed = false;
+  }
+
+  // PITCH Down Copilot
+  if (!wPressed && readingPDCP) {
+    keyboardEmulatorMessage msg(WKey, KEY_UP_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    wPressed = true;
+  }
+  if (wPressed && !readingPDCP) {
+    keyboardEmulatorMessage msg(WKey, KEY_DOWN_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    wPressed = false;
+  }
+
+  // PITCH Up Pilot
+  if (!sPressed && readingPUP) {
+    keyboardEmulatorMessage msg(SKey, KEY_UP_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    sPressed = true;
+  }
+  if (sPressed && !readingPUP) {
+    keyboardEmulatorMessage msg(SKey, KEY_DOWN_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    sPressed = false;
+  }
+
+  // PITCH Down Pilot
+  if (!wPressed && readingPDP) {
+    keyboardEmulatorMessage msg(WKey, KEY_UP_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    wPressed = true;
+  }
+  if (wPressed && !readingPDP) {
+    keyboardEmulatorMessage msg(WKey, KEY_DOWN_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    wPressed = false;
+  }
+
+
+  // Roll Buttons ====================================================================================================
+
+  bool readingRRCP = digitalRead(RollRightCop);
+  bool readingRLCP = digitalRead(RollLeftCop);
+  bool readingRRP = digitalRead(RollRightP);
+  bool readingRLP = digitalRead(RollLeftP);
+
+  // ROLL Right Copilot
+  if (!ePressed && readingRRCP) {
+    keyboardEmulatorMessage msg(EKey, KEY_UP_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    ePressed = true;
+  }
+  if (ePressed && !readingRRCP) {
+    keyboardEmulatorMessage msg(EKey, KEY_DOWN_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    ePressed = false;
+  }
+
+  // ROLL Left Copilot
+  if (!qPressed && readingRLCP) {
+    keyboardEmulatorMessage msg(QKey, KEY_UP_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    qPressed = true;
+  }
+  if (qPressed && !readingRLCP) {
+    keyboardEmulatorMessage msg(QKey, KEY_DOWN_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    qPressed = false;
+  }
+
+  // ROLL Right Pilot
+  if (!ePressed && readingRRP) {
+    keyboardEmulatorMessage msg(EKey, KEY_UP_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    ePressed = true;
+  }
+  if (ePressed && !readingRRP) {
+    keyboardEmulatorMessage msg(EKey, KEY_DOWN_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    ePressed = false;
+  }
+
+  // ROLL Left Pilot
+  if (!qPressed && readingRLP) {
+    keyboardEmulatorMessage msg(QKey, KEY_UP_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    qPressed = true;
+  }
+  if (qPressed && !readingRLP) {
+    keyboardEmulatorMessage msg(QKey, KEY_DOWN_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    qPressed = false;
+  }
+
+  // RCS Direction Buttons ====================================================================================================
+
+  bool readingRCSR = digitalRead(RCSDirR);
+  bool readingRCSL = digitalRead(RCSDirL);
+  bool readingRCSU = digitalRead(RCSDirU);
+  bool readingRCSD = digitalRead(RCSDirD);
+  bool readingRCSF = digitalRead(RCSDirF);
+  bool readingRCSB = digitalRead(RCSDirB);
+
+  // RCS Right
+  if (!lPressed && readingRCSR) {
+    keyboardEmulatorMessage msg(LKey, KEY_UP_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    lPressed = true;
+  }
+  if (lPressed && !readingRCSR) {
+    keyboardEmulatorMessage msg(LKey, KEY_DOWN_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    lPressed = false;
+  }
+
+  // RCS Left
+  if (!jPressed && readingRCSL) {
+    keyboardEmulatorMessage msg(JKey, KEY_UP_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    jPressed = true;
+  }
+  if (jPressed && !readingRCSL) {
+    keyboardEmulatorMessage msg(JKey, KEY_DOWN_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    jPressed = false;
+  }
+
+  // RCS Up
+  if (!iPressed && readingRCSU) {
+    keyboardEmulatorMessage msg(IKey, KEY_UP_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    iPressed = true;
+  }
+  if (iPressed && !readingRCSU) {
+    keyboardEmulatorMessage msg(IKey, KEY_DOWN_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    iPressed = false;
+  }
+
+  // RCS Down
+  if (!kPressed && readingRCSD) {
+    keyboardEmulatorMessage msg(KKey, KEY_UP_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    kPressed = true;
+  }
+  if (kPressed && !readingRCSD) {
+    keyboardEmulatorMessage msg(KKey, KEY_DOWN_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    kPressed = false;
+  }
+
+  // RCS Front
+  if (!hPressed && readingRCSF) {
+    keyboardEmulatorMessage msg(HKey, KEY_UP_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    hPressed = true;
+  }
+  if (hPressed && !readingRCSF) {
+    keyboardEmulatorMessage msg(HKey, KEY_DOWN_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    hPressed = false;
+  }
+
+  // RCS Back
+  if (!nPressed && readingRCSB) {
+    keyboardEmulatorMessage msg(NKey, KEY_UP_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    nPressed = true;
+  }
+  if (nPressed && !readingRCSB) {
+    keyboardEmulatorMessage msg(NKey, KEY_DOWN_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    nPressed = false;
+  }
+
+  
   // Throttle lever ====================================================================================================
 
   // Throttle reading and input
@@ -166,62 +476,55 @@ void loop() {
 
   // Convert it in KerbalSimpit Range
 
-  throttle_msg.throttle = map(readingThrottle, 0, 1023, 0, INT16_MAX);
+  throttle_msg.throttle = map(readingThrottle, 16, 1023, 0, INT16_MAX);
 
   // Send the message
 
   mySimpit.send(THROTTLE_MESSAGE, throttle_msg);
 
 
-  // SAS Switches ====================================================================================================
+  // SAS Buttons ====================================================================================================
 
   // Get the switch state
 
-  bool sas_switch_stateC = digitalRead(SASCop);
+  bool readingSASP = digitalRead(SASP); // Sets both SAS Pilot and Copilot readings to easy to use variables
+  bool readingSASCP = digitalRead(SASCop);
 
-  // Update the switch to match the state, only if a change is needed to avoid spamming commands.
-
-  if (sas_switch_stateC && !(currentActionStatus & SAS_ACTION)) {
-    mySimpit.printToKSP("Activate CoPilot SAS!");
-    mySimpit.activateAction(SAS_ACTION);
-  }
-  if (!sas_switch_stateC && (currentActionStatus & SAS_ACTION)) {
-    mySimpit.printToKSP("Desactivate CoPilot SAS!");
-    mySimpit.deactivateAction(SAS_ACTION);
-  }
-
-  // Get the switch state
-
-  bool sas_switch_stateP = digitalRead(SASP);
-
-  // Update the switch to match the state, only if a change is needed to avoid spamming commands.
-
-  if (sas_switch_stateP && !(currentActionStatus & SAS_ACTION)) {
-    mySimpit.printToKSP("Activate Pilot SAS!");
-    mySimpit.activateAction(SAS_ACTION);
-  }
-  if (!sas_switch_stateP && (currentActionStatus & SAS_ACTION)) {
-    mySimpit.printToKSP("Desactivate CoPilot SAS!");
-    mySimpit.deactivateAction(SAS_ACTION);
+  if ((millis() - lastDebounceTimeSASP) > debounceDelay) {
+    if (!readingSASP || !readingSASCP) {
+      readingSAS = true;
+      lastDebounceTimeSASP = millis();
+    } else {
+      readingSAS = false;
+    }
   }
 
-
-  // RCS Switches ====================================================================================================
-
-  // Get the switch state
-
-  bool rcs_switch_state = digitalRead(RCS);
-
-  // Update the switch to match the state, only if a change is needed to avoid spamming commands.
-
-  if (rcs_switch_state && !(currentActionStatus & RCS_ACTION)) {
-    mySimpit.printToKSP("Activate RCS!");
-    mySimpit.activateAction(RCS_ACTION);
+  if (!tPressed && readingSASP) {
+    // Send a LSHIFT keydown
+    keyboardEmulatorMessage msg(TKey, KEY_DOWN_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    tPressed = true;
   }
-  if (!rcs_switch_state && (currentActionStatus & RCS_ACTION)) {
-    mySimpit.printToKSP("Desactivate RCS!");
-    mySimpit.deactivateAction(RCS_ACTION);
+  if (tPressed && !readingSASP) {
+    // Send a LSHIFT keyup
+    keyboardEmulatorMessage msg(TKey, KEY_UP_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    tPressed = false;
   }
+
+  if (!tPressed && readingSASCP) {
+    // Send a LSHIFT keydown
+    keyboardEmulatorMessage msg(TKey, KEY_DOWN_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    tPressed = true;
+  }
+  if (tPressed && !readingSASCP) {
+    // Send a LSHIFT keyup
+    keyboardEmulatorMessage msg(TKey, KEY_UP_MOD);
+    mySimpit.send(KEYBOARD_EMULATOR, msg);
+    tPressed = false;
+  }
+
 
 
   // Stage Button ====================================================================================================
@@ -311,131 +614,131 @@ void loop() {
 
   lastButtonStateAbort = readingAbort;
 
+  //
+  //  // Gear Switch ====================================================================================================
+  //
+  //
+  //  // Get the switch state
+  //
+  //  bool gear_switch_state = digitalRead(Gear);
+  //
+  //  // Update the switch to match the state, only if a change is needed to avoid spamming commands.
+  //
+  //  if (gear_switch_state && !(currentActionStatus & GEAR_ACTION)) {
+  //    mySimpit.printToKSP("Activate Gear!");
+  //    mySimpit.activateAction(GEAR_ACTION);
+  //  }
+  //  if (!gear_switch_state && (currentActionStatus & GEAR_ACTION)) {
+  //    mySimpit.printToKSP("Desactivate Gear!");
+  //    mySimpit.deactivateAction(GEAR_ACTION);
+  //  }
+  //
+  //
+  //  // Lights Switch ====================================================================================================
+  //
+  //  // Get the switch state
+  //
+  //  bool lights_switch_state = digitalRead(Lights);
+  //
+  //  // Update the switch to match the state, only if a change is needed to avoid spamming commands.
+  //
+  //  if (lights_switch_state && !(currentActionStatus & LIGHT_ACTION)) {
+  //    mySimpit.printToKSP("Activate Lights!");
+  //    mySimpit.activateAction(LIGHT_ACTION);
+  //  }
+  //  if (!lights_switch_state && (currentActionStatus & LIGHT_ACTION)) {
+  //    mySimpit.printToKSP("Desactivate Lights!");
+  //    mySimpit.deactivateAction(LIGHT_ACTION);
+  //  }
 
-  // Gear Switch ====================================================================================================
+  //
+  //  // Brakes Switch ====================================================================================================
+  //
+  //  // Get the switch state
+  //
+  //  bool brakes_switch_state = digitalRead(Brakes);
+  //
+  //  // Update the switch to match the state, only if a change is needed to avoid spamming commands.
+  //
+  //  if (brakes_switch_state && !(currentActionStatus & BRAKES_ACTION)) {
+  //    mySimpit.printToKSP("Activate Brakes!");
+  //    mySimpit.activateAction(BRAKES_ACTION);
+  //  }
+  //  if (!lights_switch_state && (currentActionStatus & BRAKES_ACTION)) {
+  //    mySimpit.printToKSP("Desactivate Brakes!");
+  //    mySimpit.deactivateAction(BRAKES_ACTION);
+  //  }
 
+
+  // Action Group Switch ====================================================================================================
 
   // Get the switch state
 
-  bool gear_switch_state = digitalRead(Gear);
-
-  // Update the switch to match the state, only if a change is needed to avoid spamming commands.
-
-  if (gear_switch_state && !(currentActionStatus & GEAR_ACTION)) {
-    mySimpit.printToKSP("Activate Gear!");
-    mySimpit.activateAction(GEAR_ACTION);
-  }
-  if (!gear_switch_state && (currentActionStatus & GEAR_ACTION)) {
-    mySimpit.printToKSP("Desactivate Gear!");
-    mySimpit.deactivateAction(GEAR_ACTION);
-  }
-
-
-  // Lights Switch ====================================================================================================
-
-  // Get the switch state
-
-  bool lights_switch_state = digitalRead(Lights);
-
-  // Update the switch to match the state, only if a change is needed to avoid spamming commands.
-
-  if (lights_switch_state && !(currentActionStatus & LIGHT_ACTION)) {
-    mySimpit.printToKSP("Activate Lights!");
-    mySimpit.activateAction(LIGHT_ACTION);
-  }
-  if (!lights_switch_state && (currentActionStatus & LIGHT_ACTION)) {
-    mySimpit.printToKSP("Desactivate Lights!");
-    mySimpit.deactivateAction(LIGHT_ACTION);
-  }
-
-
-  // Brakes Switch ====================================================================================================
-
-  // Get the switch state
-
-  bool brakes_switch_state = digitalRead(Brakes);
-
-  // Update the switch to match the state, only if a change is needed to avoid spamming commands.
-
-  if (brakes_switch_state && !(currentActionStatus & BRAKES_ACTION)) {
-    mySimpit.printToKSP("Activate Brakes!");
-    mySimpit.activateAction(BRAKES_ACTION);
-  }
-  if (!lights_switch_state && (currentActionStatus & BRAKES_ACTION)) {
-    mySimpit.printToKSP("Desactivate Brakes!");
-    mySimpit.deactivateAction(BRAKES_ACTION);
-  }
-
-
-  // ACtion Group Switch ====================================================================================================
-
-  // Get the switch state
-
-  bool AG1_switch_state = digitalRead(AG1);
-  bool AG2_switch_state = digitalRead(AG2);
-  bool AG3_switch_state = digitalRead(AG3);
-  bool AG4_switch_state = digitalRead(AG4);
-  bool AG5_switch_state = digitalRead(AG5);
-
-  // Update the switch to match the state, only if a change is needed to avoid spamming commands.
-
-  // Action Group 1
-
-  if (AG1_switch_state && !(currentActionStatus )) {//& is_action_activated(AG1))) {
-    mySimpit.printToKSP("Activate Action Group 1!");
-    mySimpit.activateCAG(AG1);
-  }
-  if (!AG1_switch_state && (currentActionStatus )) {//& is_action_activated(AG1))) {
-    mySimpit.printToKSP("Desactivate Action Group 1!");
-    mySimpit.deactivateCAG(AG1);
-  }
-
-
-  // Action Group 2
-
-  if (AG2_switch_state && !(currentActionStatus )) {//& is_action_activated(AG2))) {
-    mySimpit.printToKSP("Activate Action Group 2!");
-    mySimpit.activateCAG(AG2);
-  }
-  if (!AG2_switch_state && (currentActionStatus )) {//& is_action_activated(AG2))) {
-    mySimpit.printToKSP("Desactivate Action Group 2!");
-    mySimpit.deactivateCAG(AG2);
-  }
-
-
-  // Action Group 3
-
-  if (AG3_switch_state && !(currentActionStatus )) {//& is_action_activated(AG3))) {
-    mySimpit.printToKSP("Activate Action Group 3!");
-    mySimpit.activateCAG(AG3);
-  }
-  if (!AG3_switch_state && (currentActionStatus )) {//& is_action_activated(AG3))) {
-    mySimpit.printToKSP("Desactivate Action Group 3!");
-    mySimpit.deactivateCAG(AG3);
-  }
-
-
-  // Action Group 4
-
-  if (AG4_switch_state && !(currentActionStatus )) {//& is_action_activated(AG4))) {
-    mySimpit.printToKSP("Activate Action Group 4!");
-    mySimpit.activateCAG(AG4);
-  }
-  if (!AG4_switch_state && (currentActionStatus )) {//& is_action_activated(AG4))) {
-    mySimpit.printToKSP("Desactivate Action Group 4!");
-    mySimpit.deactivateCAG(AG4);
-  }
-
-  // Action Group 5
-
-  if (AG5_switch_state && !(currentActionStatus )) {//& is_action_activated(AG5))) {
-    mySimpit.printToKSP("Activate Action Group 5!");
-    mySimpit.activateCAG(AG5);
-  }
-  if (!AG5_switch_state && (currentActionStatus )) {//& is_action_activated(AG5))) {
-    mySimpit.printToKSP("Desactivate Action Group 5!");
-    mySimpit.deactivateCAG(AG5);
-  }
+  //  bool AG1_switch_state = digitalRead(AG1);
+  //  bool AG2_switch_state = digitalRead(AG2);
+  //  bool AG3_switch_state = digitalRead(AG3);
+  //  bool AG4_switch_state = digitalRead(AG4);
+  //  bool AG5_switch_state = digitalRead(AG5);
+  //
+  //  // Update the switch to match the state, only if a change is needed to avoid spamming commands.
+  //
+  //  // Action Group 1
+  //
+  //  if (AG1_switch_state && !(currentActionStatus )) {//& is_action_activated(AG1))) {
+  //    mySimpit.printToKSP("Activate Action Group 1!");
+  //    mySimpit.activateCAG(AG1);
+  //  }
+  //  if (!AG1_switch_state && (currentActionStatus )) {//& is_action_activated(AG1))) {
+  //    mySimpit.printToKSP("Desactivate Action Group 1!");
+  //    mySimpit.deactivateCAG(AG1);
+  //  }
+  //
+  //
+  //  // Action Group 2
+  //
+  //  if (AG2_switch_state && !(currentActionStatus )) {//& is_action_activated(AG2))) {
+  //    mySimpit.printToKSP("Activate Action Group 2!");
+  //    mySimpit.activateCAG(AG2);
+  //  }
+  //  if (!AG2_switch_state && (currentActionStatus )) {//& is_action_activated(AG2))) {
+  //    mySimpit.printToKSP("Desactivate Action Group 2!");
+  //    mySimpit.deactivateCAG(AG2);
+  //  }
+  //
+  //
+  //  // Action Group 3
+  //
+  //  if (AG3_switch_state && !(currentActionStatus )) {//& is_action_activated(AG3))) {
+  //    mySimpit.printToKSP("Activate Action Group 3!");
+  //    mySimpit.activateCAG(AG3);
+  //  }
+  //  if (!AG3_switch_state && (currentActionStatus )) {//& is_action_activated(AG3))) {
+  //    mySimpit.printToKSP("Desactivate Action Group 3!");
+  //    mySimpit.deactivateCAG(AG3);
+  //  }
+  //
+  //
+  //  // Action Group 4
+  //
+  //  if (AG4_switch_state && !(currentActionStatus )) {//& is_action_activated(AG4))) {
+  //    mySimpit.printToKSP("Activate Action Group 4!");
+  //    mySimpit.activateCAG(AG4);
+  //  }
+  //  if (!AG4_switch_state && (currentActionStatus )) {//& is_action_activated(AG4))) {
+  //    mySimpit.printToKSP("Desactivate Action Group 4!");
+  //    mySimpit.deactivateCAG(AG4);
+  //  }
+  //
+  //  // Action Group 5
+  //
+  //  if (AG5_switch_state && !(currentActionStatus )) {//& is_action_activated(AG5))) {
+  //    mySimpit.printToKSP("Activate Action Group 5!");
+  //    mySimpit.activateCAG(AG5);
+  //  }
+  //  if (!AG5_switch_state && (currentActionStatus )) {//& is_action_activated(AG5))) {
+  //    mySimpit.printToKSP("Desactivate Action Group 5!");
+  //    mySimpit.deactivateCAG(AG5);
+  //  }
 }
 
 
@@ -452,7 +755,7 @@ void messageHandler(byte messageType, byte msg[], byte msgSize) {
         currentActionStatus = msg[0];
 
         //Let the LED_BUILIN match the current RCS state
-        if(currentActionStatus & RCS_ACTION){
+        if (currentActionStatus & RCS_ACTION) {
           digitalWrite(LED_BUILTIN, HIGH);
         } else {
           digitalWrite(LED_BUILTIN, LOW);

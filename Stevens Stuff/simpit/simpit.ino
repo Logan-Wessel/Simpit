@@ -99,6 +99,12 @@ const int L_KEY = 0x4C;
 const int K_KEY = 0x4B;
 const int H_KEY = 0x48;
 const int N_KEY = 0x4E;
+const int A_KEY = 0x41;
+const int S_KEY = 0x53;
+const int D_KEY = 0x44;
+const int W_KEY = 0x57;
+const int Q_KEY = 0x51;
+const int E_KEY = 0x45;
 
 // the following variables are unsigned long's because the time, measured
 // in miliseconds, will quickly become a bigger number than can be stored
@@ -111,8 +117,8 @@ int lastDebounceTimeStage = lastDebounceTime;
 int lastButtonStateStage = lastButtonState;
 int lastDebounceTimeAbort = lastDebounceTime;
 int lastButtonStateAbort = lastButtonState;
-int lastButtonStateSASP=LOW;
-int lastDebounceTimeSASP=lastDebounceTime;
+int lastButtonStateSASP = LOW;
+int lastDebounceTimeSASP = lastDebounceTime;
 int lastButtonStateSASCop = LOW;
 
 
